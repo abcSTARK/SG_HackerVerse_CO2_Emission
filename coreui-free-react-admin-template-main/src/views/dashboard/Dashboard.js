@@ -1,5 +1,14 @@
 import React from 'react'
-
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+} from 'chart.js'
+import { Bar } from 'react-chartjs-2'
 import {
   CAvatar,
   CButton,
@@ -59,7 +68,7 @@ const Dashboard = () => {
   const random = (min, max) => Math.floor(Math.random() * (max - min + 1) + min)
 
   const progressExample = [
-    { title: 'Visits', value: '29.703 Users', percent: 40, color: 'success' },
+    { title: 'Visits', value: '29.703 Total Carbon FootPrint', percent: 40, color: 'success' },
     { title: 'Unique', value: '24.093 Users', percent: 20, color: 'info' },
     { title: 'Pageviews', value: '78.706 Views', percent: 60, color: 'warning' },
     { title: 'New Users', value: '22.123 Users', percent: 80, color: 'danger' },
@@ -92,92 +101,133 @@ const Dashboard = () => {
     {
       avatar: { src: avatar1, status: 'success' },
       user: {
-        name: 'Yiorgos Avraamu',
-        new: true,
-        registered: 'Jan 1, 2021',
+        name: 'Airlines',
       },
-      country: { name: 'USA', flag: cifUs },
+      country: { name: '05-03-2018' },
       usage: {
-        value: 50,
+        value: '  559',
         period: 'Jun 11, 2021 - Jul 10, 2021',
         color: 'success',
       },
-      payment: { name: 'Mastercard', icon: cibCcMastercard },
-      activity: '10 sec ago',
+      payment: { name: 'GBP', icon: cibCcMastercard },
+      activity: '924 kg',
     },
     {
-      avatar: { src: avatar2, status: 'danger' },
+      avatar: { src: avatar1, status: 'danger' },
       user: {
-        name: 'Avram Tarasios',
+        name: 'Airlines',
         new: false,
         registered: 'Jan 1, 2021',
       },
-      country: { name: 'Brazil', flag: cifBr },
+      country: { name: '25-03-2018' },
       usage: {
-        value: 22,
+        value: '  671',
         period: 'Jun 11, 2021 - Jul 10, 2021',
         color: 'info',
       },
-      payment: { name: 'Visa', icon: cibCcVisa },
-      activity: '5 minutes ago',
+      payment: { name: 'NZD', icon: cibCcVisa },
+      activity: '575 kg',
     },
     {
-      avatar: { src: avatar3, status: 'warning' },
-      user: { name: 'Quintin Ed', new: true, registered: 'Jan 1, 2021' },
-      country: { name: 'India', flag: cifIn },
+      avatar: { src: avatar1, status: 'warning' },
+      user: { name: 'Airlines', new: true, registered: 'Jan 1, 2021' },
+      country: { name: '25-02-2018', flag: cifIn },
       usage: {
-        value: 74,
+        value: '  446',
         period: 'Jun 11, 2021 - Jul 10, 2021',
         color: 'warning',
       },
-      payment: { name: 'Stripe', icon: cibCcStripe },
-      activity: '1 hour ago',
+      payment: { name: 'USD', icon: cibCcStripe },
+      activity: '533 kg',
     },
     {
       avatar: { src: avatar4, status: 'secondary' },
-      user: { name: 'Enéas Kwadwo', new: true, registered: 'Jan 1, 2021' },
-      country: { name: 'France', flag: cifFr },
+      user: { name: 'Misc. Stores', new: true, registered: 'Jan 1, 2021' },
+      country: { name: '01-02-2018', flag: cifFr },
       usage: {
-        value: 98,
+        value: '  907',
         period: 'Jun 11, 2021 - Jul 10, 2021',
         color: 'danger',
       },
-      payment: { name: 'PayPal', icon: cibCcPaypal },
-      activity: 'Last month',
+      payment: { name: 'EUR', icon: cibCcPaypal },
+      activity: '425 kg',
     },
     {
       avatar: { src: avatar5, status: 'success' },
       user: {
-        name: 'Agapetus Tadeáš',
+        name: 'Business Services',
         new: true,
         registered: 'Jan 1, 2021',
       },
-      country: { name: 'Spain', flag: cifEs },
+      country: { name: '18-02-2018', flag: cifEs },
       usage: {
-        value: 22,
+        value: '  864',
         period: 'Jun 11, 2021 - Jul 10, 2021',
         color: 'primary',
       },
-      payment: { name: 'Google Wallet', icon: cibCcApplePay },
-      activity: 'Last week',
+      payment: { name: 'GBP', icon: cibCcApplePay },
+      activity: '247 kg',
     },
     {
-      avatar: { src: avatar6, status: 'danger' },
+      avatar: { src: avatar1, status: 'danger' },
       user: {
-        name: 'Friderik Dávid',
+        name: 'Airlines',
         new: true,
         registered: 'Jan 1, 2021',
       },
-      country: { name: 'Poland', flag: cifPl },
+      country: { name: '25-02-2018', flag: cifPl },
       usage: {
-        value: 43,
+        value: '  667',
         period: 'Jun 11, 2021 - Jul 10, 2021',
         color: 'success',
       },
-      payment: { name: 'Amex', icon: cibCcAmex },
-      activity: 'Last week',
+      payment: { name: 'PLN', icon: cibCcAmex },
+      activity: '207 kg',
     },
   ]
+  ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
+
+  const options = {
+    plugins: {
+      title: {
+        display: true,
+        text: 'Top 5 Category Avg. vs You',
+      },
+    },
+    responsive: true,
+    scales: {
+      x: {
+        stacked: true,
+      },
+      y: {
+        stacked: true,
+      },
+    },
+  }
+
+  const labels = [
+    'Retail Services',
+    'Lodging',
+    'Misc. Stores',
+    'Agricultural Services',
+    'Clothing Stores',
+  ]
+
+  const data = {
+    labels,
+    datasets: [
+      {
+        label: ' Category Average',
+        data: [155, 337, 222, 33, 8],
+        backgroundColor: 'rgb(255, 99, 132)',
+      },
+      {
+        label: 'Your Consumption',
+        data: [1182, 1280, 636, 265, 159],
+        backgroundColor: 'rgb(75, 192, 192)',
+      },
+    ],
+  }
 
   const [doughnut] = React.useState({
     labels: ['Red', 'Green', 'Yellow'],
@@ -193,41 +243,55 @@ const Dashboard = () => {
   return (
     <>
       <WidgetsDropdown />
+
       <AgChartsReact
         options={{
           data: [
-            { os: 'Android', share: 56.9 },
-            { os: 'iOS', share: 22.5 },
-            { os: 'BlackBerry', share: 6.8 },
-            { os: 'Symbian', share: 8.5 },
-            { os: 'Bada', share: 2.6 },
-            { os: 'Windows', share: 1.9 },
+            { os: 'Agriculture', share: 4.5 },
+            { os: 'Airlines', share: 37 },
+            { os: 'Business Services', share: 0.5 },
+            { os: 'Car Rental', share: 1 },
+            { os: 'Clothing Store', share: 2.6 },
+            { os: 'Contracted Services', share: 0.3 },
+            { os: 'Government Services', share: 0 },
+            { os: 'Lodging', share: 22 },
+            { os: 'Misc. Services', share: 10.7 },
+            { os: 'Membership', share: 1.0 },
+            { os: 'Retail Outlet Services', share: 19.1 },
+            { os: 'Transportation Services', share: 0.0 },
+            { os: 'Utility Services', share: 0.0 },
           ],
+          title: {
+            text: 'Carbon Footprint',
+          },
+          subtitle: {
+            text: 'per category',
+          },
           series: [
             {
               type: 'pie',
               labelKey: 'os',
               angleKey: 'share',
-              innerRadiusOffset: -70,
+              innerRadiusOffset: -60,
             },
           ],
         }}
       />
-      <CCard className="mb-4">
+      <CCard className="mb-4 mt-4">
         <CCardBody>
           <CRow>
             <CCol sm={5}>
               <h4 id="traffic" className="card-title mb-0">
-                Traffic
+                Carbon Footprint Trend
               </h4>
-              <div className="small text-medium-emphasis">January - July 2021</div>
+              <div className="small text-medium-emphasis">February - March 2018</div>
             </CCol>
             <CCol sm={7} className="d-none d-md-block">
               <CButton color="primary" className="float-end">
                 <CIcon icon={cilCloudDownload} />
               </CButton>
               <CButtonGroup className="float-end me-3">
-                {['Day', 'Month', 'Year'].map((value) => (
+                {['Week', 'Month', 'Year'].map((value) => (
                   <CButton
                     color="outline-secondary"
                     key={value}
@@ -240,209 +304,34 @@ const Dashboard = () => {
               </CButtonGroup>
             </CCol>
           </CRow>
-          {/* <CChart type="doughnut" datasets={doughnut.datasets} labels={doughnut.labels} /> */}
-          {/* <CChartLine
-            style={{ height: '300px', marginTop: '40px' }}
-            data={{
-              labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-              datasets: [
-                // {
-                //   label: 'My First dataset',
-                //   backgroundColor: hexToRgba(getStyle('--cui-info'), 10),
-                //   borderColor: getStyle('--cui-info'),
-                //   pointHoverBackgroundColor: getStyle('--cui-info'),
-                //   borderWidth: 2,
-                //   data: [
-                //     random(50, 200),
-                //     random(50, 200),
-                //     random(50, 200),
-                //     random(50, 200),
-                //     random(50, 200),
-                //     random(50, 200),
-                //     random(50, 200),
-                //   ],
-                //   fill: true,
-                // },
-                {
-                  label: 'My Second dataset',
-                  backgroundColor: 'transparent',
-                  borderColor: getStyle('--cui-success'),
-                  pointHoverBackgroundColor: getStyle('--cui-success'),
-                  borderWidth: 2,
-                  data: [
-                    random(50, 200),
-                    random(50, 200),
-                    random(50, 200),
-                    random(50, 200),
-                    random(50, 200),
-                    random(50, 200),
-                    random(50, 200),
-                  ],
-                },
-                {
-                  label: 'My Third dataset',
-                  backgroundColor: 'transparent',
-                  borderColor: getStyle('--cui-danger'),
-                  pointHoverBackgroundColor: getStyle('--cui-danger'),
-                  borderWidth: 1,
-                  borderDash: [8, 5],
-                  data: [65, 65, 65, 65, 65, 65, 65],
-                },
-              ],
-            }}
-            options={{
-              maintainAspectRatio: false,
-              plugins: {
-                legend: {
-                  display: false,
-                },
-              },
-              scales: {
-                x: {
-                  grid: {
-                    drawOnChartArea: false,
-                  },
-                },
-                y: {
-                  ticks: {
-                    beginAtZero: true,
-                    maxTicksLimit: 5,
-                    stepSize: Math.ceil(250 / 5),
-                    max: 250,
-                  },
-                },
-              },
-              elements: {
-                line: {
-                  tension: 0.4,
-                },
-                point: {
-                  radius: 0,
-                  hitRadius: 10,
-                  hoverRadius: 4,
-                  hoverBorderWidth: 3,
-                },
-              },
-            }}
-          /> */}
         </CCardBody>
-        {/* <CCardFooter>
-          <CRow xs={{ cols: 1 }} md={{ cols: 5 }} className="text-center">
-            {progressExample.map((item, index) => (
-              <CCol className="mb-sm-2 mb-0" key={index}>
-                <div className="text-medium-emphasis">{item.title}</div>
-                <strong>
-                  {item.value} ({item.percent}%)
-                </strong>
-                <CProgress thin className="mt-2" color={item.color} value={item.percent} />
-              </CCol>
-            ))}
-          </CRow>
-        </CCardFooter> */}
       </CCard>
-
-      {/* <WidgetsBrand withCharts /> */}
+      <CCard className="mb-4" style={{ width: '85', height: '13' }}>
+        <CCardBody>
+          <Bar options={options} data={data} />
+        </CCardBody>
+      </CCard>
 
       <CRow>
         <CCol xs>
           <CCard className="mb-4">
-            <CCardHeader>Credit Card Transactions</CCardHeader>
+            <CCardHeader>
+              <span>
+                Top Credit Card Transactions by CO<sub>2</sub> Emission
+              </span>
+            </CCardHeader>
             <CCardBody>
-              {/* <CRow>
-                <CCol xs={12} md={6} xl={6}>
-                  <CRow>
-                    <CCol sm={6}>
-                      <div className="border-start border-start-4 border-start-info py-1 px-3">
-                        <div className="text-medium-emphasis small">New Clients</div>
-                        <div className="fs-5 fw-semibold">9,123</div>
-                      </div>
-                    </CCol>
-                    <CCol sm={6}>
-                      <div className="border-start border-start-4 border-start-danger py-1 px-3 mb-3">
-                        <div className="text-medium-emphasis small">Recurring Clients</div>
-                        <div className="fs-5 fw-semibold">22,643</div>
-                      </div>
-                    </CCol>
-                  </CRow>
-
-                  <hr className="mt-0" />
-                  {progressGroupExample1.map((item, index) => (
-                    <div className="progress-group mb-4" key={index}>
-                      <div className="progress-group-prepend">
-                        <span className="text-medium-emphasis small">{item.title}</span>
-                      </div>
-                      <div className="progress-group-bars">
-                        <CProgress thin color="info" value={item.value1} />
-                        <CProgress thin color="danger" value={item.value2} />
-                      </div>
-                    </div>
-                  ))}
-                </CCol>
-
-                <CCol xs={12} md={6} xl={6}>
-                  <CRow>
-                    <CCol sm={6}>
-                      <div className="border-start border-start-4 border-start-warning py-1 px-3 mb-3">
-                        <div className="text-medium-emphasis small">Pageviews</div>
-                        <div className="fs-5 fw-semibold">78,623</div>
-                      </div>
-                    </CCol>
-                    <CCol sm={6}>
-                      <div className="border-start border-start-4 border-start-success py-1 px-3 mb-3">
-                        <div className="text-medium-emphasis small">Organic</div>
-                        <div className="fs-5 fw-semibold">49,123</div>
-                      </div>
-                    </CCol>
-                  </CRow>
-
-                  <hr className="mt-0" />
-
-                  {progressGroupExample2.map((item, index) => (
-                    <div className="progress-group mb-4" key={index}>
-                      <div className="progress-group-header">
-                        <CIcon className="me-2" icon={item.icon} size="lg" />
-                        <span>{item.title}</span>
-                        <span className="ms-auto fw-semibold">{item.value}%</span>
-                      </div>
-                      <div className="progress-group-bars">
-                        <CProgress thin color="warning" value={item.value} />
-                      </div>
-                    </div>
-                  ))}
-
-                  <div className="mb-5"></div>
-
-                  {progressGroupExample3.map((item, index) => (
-                    <div className="progress-group" key={index}>
-                      <div className="progress-group-header">
-                        <CIcon className="me-2" icon={item.icon} size="lg" />
-                        <span>{item.title}</span>
-                        <span className="ms-auto fw-semibold">
-                          {item.value}{' '}
-                          <span className="text-medium-emphasis small">({item.percent}%)</span>
-                        </span>
-                      </div>
-                      <div className="progress-group-bars">
-                        <CProgress thin color="success" value={item.percent} />
-                      </div>
-                    </div>
-                  ))}
-                </CCol>
-              </CRow>
-
-              <br /> */}
-
-              <CTable align="middle" className="mb-0 border" hover responsive>
-                <CTableHead color="light">
+              <CTable striped align="middle" className="mb-0 border" hover responsive>
+                <CTableHead color="dark">
                   <CTableRow>
                     <CTableHeaderCell className="text-center">
                       <CIcon icon={cilPeople} />
                     </CTableHeaderCell>
-                    <CTableHeaderCell>User</CTableHeaderCell>
-                    <CTableHeaderCell className="text-center">Country</CTableHeaderCell>
-                    <CTableHeaderCell>Usage</CTableHeaderCell>
-                    <CTableHeaderCell className="text-center">Payment Method</CTableHeaderCell>
-                    <CTableHeaderCell>Activity</CTableHeaderCell>
+                    <CTableHeaderCell>Category</CTableHeaderCell>
+                    <CTableHeaderCell className="text-center">Transaction Date</CTableHeaderCell>
+                    <CTableHeaderCell>Transaction Amount</CTableHeaderCell>
+                    <CTableHeaderCell className="text-center">Currency</CTableHeaderCell>
+                    <CTableHeaderCell>Carbon Emission</CTableHeaderCell>
                   </CTableRow>
                 </CTableHead>
                 <CTableBody>
@@ -453,31 +342,20 @@ const Dashboard = () => {
                       </CTableDataCell>
                       <CTableDataCell>
                         <div>{item.user.name}</div>
-                        <div className="small text-medium-emphasis">
-                          <span>{item.user.new ? 'New' : 'Recurring'}</span> | Registered:{' '}
-                          {item.user.registered}
-                        </div>
                       </CTableDataCell>
                       <CTableDataCell className="text-center">
-                        <CIcon size="xl" icon={item.country.flag} title={item.country.name} />
+                        <span>{item.country.name}</span>
                       </CTableDataCell>
                       <CTableDataCell>
                         <div className="clearfix">
-                          <div className="float-start">
-                            <strong>{item.usage.value}%</strong>
-                          </div>
-                          <div className="float-end">
-                            <small className="text-medium-emphasis">{item.usage.period}</small>
-                          </div>
+                          <div className="float-start">{item.usage.value}</div>
                         </div>
-                        <CProgress thin color={item.usage.color} value={item.usage.value} />
                       </CTableDataCell>
-                      <CTableDataCell className="text-center">
-                        <CIcon size="xl" icon={item.payment.icon} />
-                      </CTableDataCell>
+                      <CTableDataCell className="text-center">{item.payment.name}</CTableDataCell>
                       <CTableDataCell>
-                        <div className="small text-medium-emphasis">Last login</div>
-                        <strong>{item.activity}</strong>
+                        <div className="clearfix">
+                          <div className="float-start">{item.activity}</div>
+                        </div>
                       </CTableDataCell>
                     </CTableRow>
                   ))}
