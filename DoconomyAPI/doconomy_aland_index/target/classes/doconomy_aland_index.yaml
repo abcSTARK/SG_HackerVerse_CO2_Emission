@@ -1,0 +1,441 @@
+openapi: 3.0.3
+info:
+  title: Doconomy Aland Index
+  description: OpenAPI Specification for Doconomy Aland Index. For additional documentation and use cases, go to [Mastercard Developers](https://developer.mastercard.com/product/doconomy-aland-index).
+  contact:
+    name: Mastercard
+    email: apisupport@mastercard.com
+  version: '1.0.0'
+externalDocs:
+  description: ISO 4217 - Currency Code
+  url: https://en.wikipedia.org/wiki/ISO_4217
+servers:
+- url: https://sandbox.api.mastercard.com/doconomy
+  description: Sandbox
+- url: https://api.mastercard.com/doconomy
+  description: Production
+paths:
+  /transaction-footprints:
+    post:
+      tags:
+      - Environmental Impact
+      summary: Calculate Transaction Footprints
+      description: This service calculates carbon emission and water usage based on payment transaction amount and the merchant category code. You can send one or more transactions together to get the transaction footprints.
+      operationId: FootprintsByTransactionData
+      requestBody:
+        description: List of payment transaction which needs to be scored.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MCTransactions'
+        required: true
+      responses:
+        200:
+          $ref: '#/components/responses/MCTransactionFootprints'
+        400:
+          $ref: '#/components/responses/BadRequestError'
+        415:
+          $ref: '#/components/responses/UnsupportedMediaTypeError'
+        500:
+          $ref: '#/components/responses/InternalServerError'
+  /supported-currencies:
+    get:
+      tags: 
+        - Supported Parameters
+      summary: Provide Supported Currencies
+      description: This service provides list of currencies supported by the application. While sending a transaction amount in Amount object, 'currencyCode' should be from one of the supported currencies. It is recommended to cache this list and use it for checking before sending transactions for footprint calculation.<br><br>Generally this list doesn't change that often but it is recommended to refresh this data every 24-hours.
+      operationId: GetSupportedCurrencies
+      responses:
+        200:
+          $ref: '#/components/responses/MCSupportedCurrencies'
+        500:
+          $ref: '#/components/responses/InternalServerError'
+  /supported-merchant-categories:
+    get:
+      tags: 
+        - Supported Parameters
+      summary: Provide Supported MCCs
+      description: This service provides list of merchant category codes supported by the application. While sending a transaction data in Transaction object, 'mcc' should be from one of the supported merchant categories. It is recommended to cache this list and use it for checking before sending transactions for footprint calculation.<br><br>Generally this list doesn't change that often but it is recommended to refresh this data every 24-hours.
+      operationId: GetSupportedMerchantCategories
+      responses:
+        200:
+          $ref: '#/components/responses/MCSupportedMerchantCategories'
+        500:
+          $ref: '#/components/responses/InternalServerError'
+components:
+  schemas:
+    MCTransactions:
+      title: Transactions
+      type: object
+      description: Request object which holds all the payment transactions from API consumer for calculating transaction footprint.
+      required:
+      - transactions
+      properties:
+        transactions:
+          minItems: 1
+          maxItems: 5000
+          type: array
+          items:
+            $ref: '#/components/schemas/MCTransaction'
+          example: 
+            - transactionId: 'ee421c25-f928-4bf6-b884-3600b76b860d'
+              mcc: 3997
+              amount:
+                value: 100
+                currencyCode: 'USD'
+            - transactionId: 'fdc4626c-f51e-4ba6-9728-c79ac1d9aec8'
+              mcc: 5962
+              amount:
+                value: 50
+                currencyCode: 'EUR'
+    MCTransaction:
+      title: Transaction
+      type: object
+      description: This object holds data corresponding to a single payment transaction.
+      required:
+      - amount
+      - mcc
+      - transactionId
+      properties:
+        transactionId:
+          $ref: '#/components/schemas/TransactionId'
+        mcc:
+          type: string
+          description: Merchant category code of a payment transaction that uniquely defines a merchant business.
+          minLength: 1
+          maxLength: 4
+          pattern: ^\d{1,4}
+        amount:
+          $ref: '#/components/schemas/MCAmount'
+    TransactionId:
+      type: string
+      description: A unique id associated with a payment transaction, e.g. original payment transaction id. The same id will be returned in the response corresponding to its payment transaction.
+      minLength: 1
+      maxLength: 100
+      pattern: ^[\w\-\_]{1,100}
+    MCAmount:
+      title: Amount
+      type: object
+      description: Amount object that includes the value and the currency in which a payment transaction has been performed
+      required:
+      - currencyCode
+      - value
+      properties:
+        value:
+          type: number
+          description: Actual amount of a payment transaction
+          maximum: 1000000000
+          exclusiveMaximum: false
+          minimum: -1000000000
+          exclusiveMinimum: false
+        currencyCode:
+          $ref: '#/components/schemas/CurrencyCode'
+    CurrencyCode:
+      type: string
+      description: Currency code as per ISO 4217
+      minLength: 3
+      maxLength: 3
+      pattern: ^[A-Za-z]{3}$
+    MCTransactionFootprints:
+      title: TransactionFootprints
+      type: object
+      description: Response object which holds all the transaction footprints corresponding to each transaction in Transactions request.
+      required:
+      - transactionFootprints
+      properties:
+        transactionFootprints:
+          type: array
+          minItems: 1
+          maxItems: 5000
+          items:
+            $ref: '#/components/schemas/MCTransactionFootprint'
+    MCTransactionFootprint:
+      title: TransactionFootprint
+      type: object
+      description: This object holds the transaction footprint for a payment transaction. 
+      required:
+      - transactionId
+      properties:
+        transactionId:
+          $ref: '#/components/schemas/TransactionId'
+        carbonEmissionInGrams:
+          title: carbonEmissionInGrams
+          type: number
+          description: The transaction's CO2 emission in grams
+        carbonEmissionInOunces:
+          title: carbonEmissionInOunces
+          type: number
+          description: The transaction's CO2 emission in ounces
+        carbonSocialCost:
+          $ref: '#/components/schemas/MCCarbonSocialCost'
+        waterUseInCubicMeters:
+          title: waterUseInCubicMeters
+          type: number
+          description: The transaction's water use in cubic meters
+        waterUseInGallons:
+          title: waterUseInGallons
+          type: number
+          description: The transaction's water use in US gallons
+        waterUseSocialCost:
+          $ref: '#/components/schemas/MCWaterUseSocialCost'
+    MCCarbonSocialCost:
+      title: CarbonSocialCost
+      type: object
+      description: The response object that contains a transaction's social cost of carbon use.
+      properties:
+        value:
+          title: value
+          type: number
+          description: Actual value of CarbonSocialCost
+          maximum: 1000000000
+          exclusiveMaximum: false
+          minimum: -1000000000
+          exclusiveMinimum: false
+        currencyCode:
+          $ref: '#/components/schemas/CurrencyCode'
+    MCWaterUseSocialCost:
+      title: WaterUseSocialCost
+      type: object
+      description: The response object that contains a transaction's social cost of water use.
+      properties:
+        value:
+          title: value
+          type: number
+          description: Actual value of CarbonSocialCost
+          maximum: 1000000000
+          exclusiveMaximum: false
+          minimum: -1000000000
+          exclusiveMinimum: false
+        currencyCode:
+          $ref: '#/components/schemas/CurrencyCode'
+    MCSupportedCurrencies:
+      title: SupportedCurrencies
+      type: object
+      description: The response object that contains a list of supported curencies.
+      required: 
+      - currencies
+      properties:
+        currencies: 
+          minItems: 1
+          maxItems: 1000
+          type: array
+          items:
+            $ref: '#/components/schemas/MCCurrency'
+    MCCurrency: 
+      title: Currency
+      type: object
+      description: This object represents one currency code information.
+      required: 
+      - currencyCode
+      properties:
+        currencyCode: 
+          $ref: '#/components/schemas/CurrencyCode'
+    MCSupportedMerchantCategories:
+      title: SupportedMerchantCategories
+      type: object
+      description: The response object that contains a list of supported merchant categories.
+      required: 
+      - merchantCategories
+      properties:
+        merchantCategories: 
+          minItems: 1
+          maxItems: 5000
+          type: array
+          items:
+            $ref: '#/components/schemas/MCMerchantCategory'
+    MCMerchantCategory:
+      title: MerchantCategory
+      type: object
+      description: This object represents one merchant category information.
+      required: 
+      - mcc
+      properties:
+        mcc: 
+          type: string
+          maxLength: 4
+          minLength: 1
+          pattern: ^\d{1,4}
+          description: Merchant category code of a payment transaction that uniquely defines a merchant business.
+    MCErrorResponse:
+      title: ErrorResponse
+      type: object
+      description: The error response object which gets returned in case of any error.
+      required:
+      - Errors
+      properties:
+        Errors:
+          $ref: '#/components/schemas/MCErrors'
+    MCErrors:
+      title: Errors
+      type: object
+      description: Error object which returns list of Error objects
+      required:
+      - Error
+      properties:
+        Error:
+          type: array
+          items:
+            $ref: '#/components/schemas/MCError'
+    MCError:
+      title: Error
+      type: object
+      description: Error object which contains details about error
+      required:
+      - Source
+      - ReasonCode
+      - Description
+      - Recoverable
+      properties:
+        Source:
+          type: string
+          description: The application name that generated this error. Every error message that is generated and returned by the gateway will have this field equal to Gateway. Other possible values are Doconomy-Proxy and Doconomy.
+          minLength: 1
+          maxLength: 100
+        ReasonCode:
+          type: string
+          description: A unique constant identifying the error case encountered during request processing.
+          minLength: 1
+          maxLength: 100
+        Description:
+          type: string
+          description: Short description of the ReasonCode field.
+          minLength: 10
+          maxLength: 1000
+        Recoverable:
+          type: boolean
+          description: Indicates whether this error will always be returned for this request, or retrying could change the outcome.
+        Details:
+          type: string
+          description: (Optional) Where appropriate, indicates detailed information about data received and calculated during request processing, to help the user with diagnosing errors.
+          minLength: 0
+          maxLength: 5000
+  responses:
+    MCTransactionFootprints:
+      description: This response code is returned when a request is accepted and successfuly processed. A corresponding response will be returned for the API caller.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/MCTransactionFootprints'
+          examples:
+            MCTransactionFootprints:
+              $ref: '#/components/examples/MCTransactionFootprints'
+    MCSupportedCurrencies:
+      description: This response code is returned when a request is accepted and successfuly processed. A corresponding response will be returned for the API caller.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/MCSupportedCurrencies'
+          examples:
+            MCSupportedCurrencies:
+              $ref: '#/components/examples/MCSupportedCurrencies'
+    MCSupportedMerchantCategories:
+      description: This response code is returned when a request is accepted and successfuly processed. A corresponding response will be returned for the API caller.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/MCSupportedMerchantCategories'
+          examples:
+            MCSupportedMerchantCategories:
+              $ref: '#/components/examples/MCSupportedMerchantCategories'
+    UnsupportedMediaTypeError:
+      description: This response code is returned when the MediaType in request is other than application/json.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/MCErrorResponse'
+          examples:
+            UnsupportedMediaTypeError:
+              $ref: '#/components/examples/UnsupportedMediaTypeError'
+    BadRequestError:
+      description: This response code is returned when one or more request parameters is either missing or is invalid. A caller should update his request as per error details before trying again.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/MCErrorResponse'
+          examples:
+            BadRequestError:
+              $ref: '#/components/examples/BadRequestError'
+    InternalServerError:
+      description: This is usually a temporary error, for example when downstream Doconomy system is not reachable or is experiencing heavy traffic. Please contact support email or try again later.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/MCErrorResponse'
+          examples:
+            InternalError:
+              $ref: '#/components/examples/InternalServerError'
+  examples:
+    MCTransactionFootprints:
+      value: 
+        transactionFootprints:
+          - transactionId: 'ee421c25-f928-4bf6-b884-3600b76b860d'
+            carbonEmissionInGrams: 48.52
+            carbonEmissionInOunces: 1.71
+            carbonSocialCost:
+              value: 14.00
+              currencyCode: 'USD'
+            waterUseInCubicMeters: 57.50
+            waterUseInGallons: 15190.24
+            waterUseSocialCost:
+              value: 24.00
+              currencyCode: 'USD'
+          - transactionId: 'fdc4626c-f51e-4ba6-9728-c79ac1d9aec8'
+            carbonEmissionInGrams: 27.98 
+            carbonEmissionInOunces: 0.99
+            carbonSocialCost:
+              value: 7.98
+              currencyCode: 'EUR'
+            waterUseInCubicMeters: 32.98
+            waterUseInGallons: 8712.66
+            waterUseSocialCost:
+              value: 12.98
+              currencyCode: 'EUR'
+    MCSupportedCurrencies:
+      value: 
+        currencies:
+          - currencyCode: 'SEK'
+          - currencyCode: 'USD'
+          - currencyCode: 'EUR'
+          - currencyCode: 'GBP'
+    MCSupportedMerchantCategories:
+      value: 
+        merchantCategories:
+          - mcc: 3860
+          - mcc: 3861
+          - mcc: 3620
+          - mcc: 3862
+          - mcc: 3621
+          - mcc: 3863
+          - mcc: 5800
+    BadRequestError: 
+      value: 
+        Errors:
+          Error:
+            - Source: 'Carbon-Calculator-Proxy'
+              ReasonCode: 'INVALID_REQUEST_PARAMETER'
+              Description: 'One of the request parameters is invalid, try again with correct request.'
+              Recoverable: false
+              Details: 'transactions[0].mcc size must be between 1 and 4'
+            - Source: 'Carbon-Calculator-Proxy'
+              ReasonCode: 'INVALID_REQUEST_PARAMETER'
+              Description: 'One of the request parameters is invalid, try again with correct request.'
+              Recoverable: false
+              Details: 'transactions[0].mcc must match "^\d{1,4}"'
+    UnsupportedMediaTypeError:
+      value: 
+        Errors:
+          Error:
+            - Source: 'Carbon-Calculator-Proxy'
+              ReasonCode: 'UNSUPPORTED_MEDIA_TYPE'
+              Description: 'Requested media type is not supported, try again with supported media type.'
+              Recoverable: false
+              Details: ''
+    InternalServerError:
+      value: 
+        Errors:
+          Error:
+            - Source: 'Carbon-Calculator-Proxy'
+              ReasonCode: 'INTERNAL_SERVER_ERROR'
+              Description: 'Server is experiencing some error, try again after some time.'
+              Recoverable: false
+              Details: ''

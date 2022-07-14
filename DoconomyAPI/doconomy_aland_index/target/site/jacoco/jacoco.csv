@@ -1,0 +1,56 @@
+GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
+doconomy_aland_index,org.openapitools.client.auth,HttpBearerAuth,42,0,6,0,11,0,8,0,5,0
+doconomy_aland_index,org.openapitools.client.auth,HttpBasicAuth,44,0,8,0,13,0,10,0,6,0
+doconomy_aland_index,org.openapitools.client.auth,ApiKeyAuth,85,0,10,0,24,0,13,0,8,0
+doconomy_aland_index,com.mastercard.developer.controller,DoconomyAlandIndexController,0,25,0,0,0,7,0,4,0,4
+doconomy_aland_index,com.mastercard.developer.configuration,ApiClientSetup,5,53,0,0,2,12,0,3,0,3
+doconomy_aland_index,org.openapitools.client,ApiException,124,0,0,0,29,0,12,0,12,0
+doconomy_aland_index,org.openapitools.client,JSON.OffsetDateTimeTypeAdapter,49,10,6,0,13,5,6,2,3,2
+doconomy_aland_index,org.openapitools.client,GzipRequestInterceptor,57,0,4,0,13,0,6,0,4,0
+doconomy_aland_index,org.openapitools.client,ProgressRequestBody.new ForwardingSink() {...},51,0,4,0,9,0,4,0,2,0
+doconomy_aland_index,org.openapitools.client,Pair,51,0,8,0,21,0,10,0,6,0
+doconomy_aland_index,org.openapitools.client,ProgressResponseBody.new ForwardingSource() {...},46,0,4,0,6,0,4,0,2,0
+doconomy_aland_index,org.openapitools.client,Configuration,13,0,0,0,5,0,4,0,4,0
+doconomy_aland_index,org.openapitools.client,ApiResponse,12,15,0,0,4,6,3,2,3,2
+doconomy_aland_index,org.openapitools.client,GzipRequestInterceptor.new RequestBody() {...},28,0,0,0,7,0,4,0,4,0
+doconomy_aland_index,org.openapitools.client,GzipRequestInterceptor.new RequestBody() {...},27,0,0,0,5,0,4,0,4,0
+doconomy_aland_index,org.openapitools.client,JSON.DateTypeAdapter,74,3,8,0,23,1,8,1,4,1
+doconomy_aland_index,org.openapitools.client,ServerVariable,15,0,0,0,6,0,1,0,1,0
+doconomy_aland_index,org.openapitools.client,JSON.ByteArrayAdapter,32,6,4,0,10,1,4,1,2,1
+doconomy_aland_index,org.openapitools.client,ApiClient,1322,481,167,51,301,108,153,28,48,24
+doconomy_aland_index,org.openapitools.client,JSON.LocalDateTypeAdapter,36,14,4,0,11,5,5,2,3,2
+doconomy_aland_index,org.openapitools.client,ServerConfiguration,78,0,10,0,18,0,8,0,3,0
+doconomy_aland_index,org.openapitools.client,ProgressResponseBody,37,0,2,0,10,0,6,0,5,0
+doconomy_aland_index,org.openapitools.client,JSON,96,80,7,1,28,21,13,4,9,4
+doconomy_aland_index,org.openapitools.client,ApiClient.new HostnameVerifier() {...},8,0,0,0,2,0,2,0,2,0
+doconomy_aland_index,org.openapitools.client,ApiClient.new X509TrustManager() {...},11,0,0,0,4,0,4,0,4,0
+doconomy_aland_index,org.openapitools.client,ApiClient.new Interceptor() {...},15,19,1,1,4,5,1,2,0,2
+doconomy_aland_index,org.openapitools.client,ProgressRequestBody,35,0,0,0,11,0,5,0,5,0
+doconomy_aland_index,org.openapitools.client,ApiClient.new Callback() {...},51,0,0,0,10,0,3,0,3,0
+doconomy_aland_index,org.openapitools.client,JSON.SqlDateTypeAdapter,75,3,8,0,21,1,8,1,4,1
+doconomy_aland_index,org.openapitools.client,StringUtil,70,0,14,0,15,0,10,0,3,0
+doconomy_aland_index,org.openapitools.client.api,SupportedParametersApi.new TypeToken() {...},6,0,0,0,1,0,1,0,1,0
+doconomy_aland_index,org.openapitools.client.api,SupportedParametersApi.new TypeToken() {...},0,6,0,0,0,1,0,1,0,1
+doconomy_aland_index,org.openapitools.client.api,SupportedParametersApi.new TypeToken() {...},6,0,0,0,1,0,1,0,1,0
+doconomy_aland_index,org.openapitools.client.api,SupportedParametersApi.new TypeToken() {...},0,6,0,0,0,1,0,1,0,1
+doconomy_aland_index,org.openapitools.client.api,EnvironmentalImpactApi.new TypeToken() {...},0,6,0,0,0,1,0,1,0,1
+doconomy_aland_index,org.openapitools.client.api,EnvironmentalImpactApi.new TypeToken() {...},6,0,0,0,1,0,1,0,1,0
+doconomy_aland_index,org.openapitools.client.api,SupportedParametersApi,47,210,2,2,13,49,7,9,5,9
+doconomy_aland_index,org.openapitools.client.api,EnvironmentalImpactApi,35,117,2,2,10,27,6,5,4,5
+doconomy_aland_index,org.openapitools.client.model,MCTransactionFootprints,50,45,7,1,14,10,9,4,5,4
+doconomy_aland_index,org.openapitools.client.model,MCTransactionFootprint,167,124,21,1,42,21,27,10,16,10
+doconomy_aland_index,org.openapitools.client.model,MCErrors,95,0,8,0,24,0,13,0,9,0
+doconomy_aland_index,org.openapitools.client.model,MCError,223,0,18,0,49,0,29,0,20,0
+doconomy_aland_index,org.openapitools.client.model,MCErrorResponse,83,0,8,0,21,0,12,0,8,0
+doconomy_aland_index,org.openapitools.client.model,MCSupportedCurrencies,84,11,8,0,21,3,11,2,7,2
+doconomy_aland_index,org.openapitools.client.model,MCMerchantCategory,77,6,8,0,19,2,10,2,6,2
+doconomy_aland_index,org.openapitools.client.model,MCTransactions,76,19,8,0,18,6,10,3,6,3
+doconomy_aland_index,org.openapitools.client.model,MCSupportedMerchantCategories,84,11,8,0,21,3,11,2,7,2
+doconomy_aland_index,org.openapitools.client.model,MCTransaction,125,30,14,0,22,13,14,7,7,7
+doconomy_aland_index,org.openapitools.client.model,MCCarbonSocialCost,67,54,11,1,17,11,12,5,6,5
+doconomy_aland_index,org.openapitools.client.model,MCCurrency,77,6,8,0,19,2,10,2,6,2
+doconomy_aland_index,org.openapitools.client.model,MCWaterUseSocialCost,67,54,11,1,17,11,12,5,6,5
+doconomy_aland_index,org.openapitools.client.model,MCAmount,100,21,12,0,19,9,12,5,6,5
+doconomy_aland_index,com.mastercard.developer.service,EnvironmentalImpactService,0,29,0,0,0,9,0,3,0,3
+doconomy_aland_index,com.mastercard.developer.service,SupportedParametersService,0,40,0,0,0,13,0,4,0,4
+doconomy_aland_index,com.mastercard.developer,DoconomyAlandIndexApplication,8,0,0,0,3,0,2,0,2,0

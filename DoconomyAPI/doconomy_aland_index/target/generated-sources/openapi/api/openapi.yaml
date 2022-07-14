@@ -1,0 +1,690 @@
+openapi: 3.0.3
+info:
+  contact:
+    email: apisupport@mastercard.com
+    name: Mastercard
+  description: OpenAPI Specification for Doconomy Aland Index. For additional documentation
+    and use cases, go to [Mastercard Developers](https://developer.mastercard.com/product/doconomy-aland-index).
+  title: Doconomy Aland Index
+  version: 1.0.0
+externalDocs:
+  description: ISO 4217 - Currency Code
+  url: https://en.wikipedia.org/wiki/ISO_4217
+servers:
+- description: Sandbox
+  url: https://sandbox.api.mastercard.com/doconomy
+- description: Production
+  url: https://api.mastercard.com/doconomy
+paths:
+  /transaction-footprints:
+    post:
+      description: This service calculates carbon emission and water usage based on
+        payment transaction amount and the merchant category code. You can send one
+        or more transactions together to get the transaction footprints.
+      operationId: FootprintsByTransactionData
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MCTransactions'
+        description: List of payment transaction which needs to be scored.
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              examples:
+                MCTransactionFootprints:
+                  $ref: '#/components/examples/MCTransactionFootprints'
+              schema:
+                $ref: '#/components/schemas/MCTransactionFootprints'
+          description: This response code is returned when a request is accepted and
+            successfuly processed. A corresponding response will be returned for the
+            API caller.
+        "400":
+          content:
+            application/json:
+              examples:
+                BadRequestError:
+                  $ref: '#/components/examples/BadRequestError'
+              schema:
+                $ref: '#/components/schemas/MCErrorResponse'
+          description: This response code is returned when one or more request parameters
+            is either missing or is invalid. A caller should update his request as
+            per error details before trying again.
+        "415":
+          content:
+            application/json:
+              examples:
+                UnsupportedMediaTypeError:
+                  $ref: '#/components/examples/UnsupportedMediaTypeError'
+              schema:
+                $ref: '#/components/schemas/MCErrorResponse'
+          description: This response code is returned when the MediaType in request
+            is other than application/json.
+        "500":
+          content:
+            application/json:
+              examples:
+                InternalError:
+                  $ref: '#/components/examples/InternalServerError'
+              schema:
+                $ref: '#/components/schemas/MCErrorResponse'
+          description: This is usually a temporary error, for example when downstream
+            Doconomy system is not reachable or is experiencing heavy traffic. Please
+            contact support email or try again later.
+      summary: Calculate Transaction Footprints
+      tags:
+      - Environmental Impact
+      x-contentType: application/json
+      x-accepts: application/json
+  /supported-currencies:
+    get:
+      description: This service provides list of currencies supported by the application.
+        While sending a transaction amount in Amount object, 'currencyCode' should
+        be from one of the supported currencies. It is recommended to cache this list
+        and use it for checking before sending transactions for footprint calculation.<br><br>Generally
+        this list doesn't change that often but it is recommended to refresh this
+        data every 24-hours.
+      operationId: GetSupportedCurrencies
+      responses:
+        "200":
+          content:
+            application/json:
+              examples:
+                MCSupportedCurrencies:
+                  $ref: '#/components/examples/MCSupportedCurrencies'
+              schema:
+                $ref: '#/components/schemas/MCSupportedCurrencies'
+          description: This response code is returned when a request is accepted and
+            successfuly processed. A corresponding response will be returned for the
+            API caller.
+        "500":
+          content:
+            application/json:
+              examples:
+                InternalError:
+                  $ref: '#/components/examples/InternalServerError'
+              schema:
+                $ref: '#/components/schemas/MCErrorResponse'
+          description: This is usually a temporary error, for example when downstream
+            Doconomy system is not reachable or is experiencing heavy traffic. Please
+            contact support email or try again later.
+      summary: Provide Supported Currencies
+      tags:
+      - Supported Parameters
+      x-accepts: application/json
+  /supported-merchant-categories:
+    get:
+      description: This service provides list of merchant category codes supported
+        by the application. While sending a transaction data in Transaction object,
+        'mcc' should be from one of the supported merchant categories. It is recommended
+        to cache this list and use it for checking before sending transactions for
+        footprint calculation.<br><br>Generally this list doesn't change that often
+        but it is recommended to refresh this data every 24-hours.
+      operationId: GetSupportedMerchantCategories
+      responses:
+        "200":
+          content:
+            application/json:
+              examples:
+                MCSupportedMerchantCategories:
+                  $ref: '#/components/examples/MCSupportedMerchantCategories'
+              schema:
+                $ref: '#/components/schemas/MCSupportedMerchantCategories'
+          description: This response code is returned when a request is accepted and
+            successfuly processed. A corresponding response will be returned for the
+            API caller.
+        "500":
+          content:
+            application/json:
+              examples:
+                InternalError:
+                  $ref: '#/components/examples/InternalServerError'
+              schema:
+                $ref: '#/components/schemas/MCErrorResponse'
+          description: This is usually a temporary error, for example when downstream
+            Doconomy system is not reachable or is experiencing heavy traffic. Please
+            contact support email or try again later.
+      summary: Provide Supported MCCs
+      tags:
+      - Supported Parameters
+      x-accepts: application/json
+components:
+  examples:
+    MCTransactionFootprints:
+      value:
+        transactionFootprints:
+        - transactionId: ee421c25-f928-4bf6-b884-3600b76b860d
+          carbonEmissionInGrams: 48.52
+          carbonEmissionInOunces: 1.71
+          carbonSocialCost:
+            value: 14.0
+            currencyCode: USD
+          waterUseInCubicMeters: 57.5
+          waterUseInGallons: 15190.24
+          waterUseSocialCost:
+            value: 24.0
+            currencyCode: USD
+        - transactionId: fdc4626c-f51e-4ba6-9728-c79ac1d9aec8
+          carbonEmissionInGrams: 27.98
+          carbonEmissionInOunces: 0.99
+          carbonSocialCost:
+            value: 7.98
+            currencyCode: EUR
+          waterUseInCubicMeters: 32.98
+          waterUseInGallons: 8712.66
+          waterUseSocialCost:
+            value: 12.98
+            currencyCode: EUR
+    MCSupportedCurrencies:
+      value:
+        currencies:
+        - currencyCode: SEK
+        - currencyCode: USD
+        - currencyCode: EUR
+        - currencyCode: GBP
+    MCSupportedMerchantCategories:
+      value:
+        merchantCategories:
+        - mcc: 3860
+        - mcc: 3861
+        - mcc: 3620
+        - mcc: 3862
+        - mcc: 3621
+        - mcc: 3863
+        - mcc: 5800
+    BadRequestError:
+      value:
+        Errors:
+          Error:
+          - Source: Carbon-Calculator-Proxy
+            ReasonCode: INVALID_REQUEST_PARAMETER
+            Description: One of the request parameters is invalid, try again with
+              correct request.
+            Recoverable: false
+            Details: transactions[0].mcc size must be between 1 and 4
+          - Source: Carbon-Calculator-Proxy
+            ReasonCode: INVALID_REQUEST_PARAMETER
+            Description: One of the request parameters is invalid, try again with
+              correct request.
+            Recoverable: false
+            Details: transactions[0].mcc must match "^\d{1,4}"
+    UnsupportedMediaTypeError:
+      value:
+        Errors:
+          Error:
+          - Source: Carbon-Calculator-Proxy
+            ReasonCode: UNSUPPORTED_MEDIA_TYPE
+            Description: Requested media type is not supported, try again with supported
+              media type.
+            Recoverable: false
+            Details: ""
+    InternalServerError:
+      value:
+        Errors:
+          Error:
+          - Source: Carbon-Calculator-Proxy
+            ReasonCode: INTERNAL_SERVER_ERROR
+            Description: Server is experiencing some error, try again after some time.
+            Recoverable: false
+            Details: ""
+  responses:
+    MCTransactionFootprints:
+      content:
+        application/json:
+          examples:
+            MCTransactionFootprints:
+              $ref: '#/components/examples/MCTransactionFootprints'
+          schema:
+            $ref: '#/components/schemas/MCTransactionFootprints'
+      description: This response code is returned when a request is accepted and successfuly
+        processed. A corresponding response will be returned for the API caller.
+    MCSupportedCurrencies:
+      content:
+        application/json:
+          examples:
+            MCSupportedCurrencies:
+              $ref: '#/components/examples/MCSupportedCurrencies'
+          schema:
+            $ref: '#/components/schemas/MCSupportedCurrencies'
+      description: This response code is returned when a request is accepted and successfuly
+        processed. A corresponding response will be returned for the API caller.
+    MCSupportedMerchantCategories:
+      content:
+        application/json:
+          examples:
+            MCSupportedMerchantCategories:
+              $ref: '#/components/examples/MCSupportedMerchantCategories'
+          schema:
+            $ref: '#/components/schemas/MCSupportedMerchantCategories'
+      description: This response code is returned when a request is accepted and successfuly
+        processed. A corresponding response will be returned for the API caller.
+    UnsupportedMediaTypeError:
+      content:
+        application/json:
+          examples:
+            UnsupportedMediaTypeError:
+              $ref: '#/components/examples/UnsupportedMediaTypeError'
+          schema:
+            $ref: '#/components/schemas/MCErrorResponse'
+      description: This response code is returned when the MediaType in request is
+        other than application/json.
+    BadRequestError:
+      content:
+        application/json:
+          examples:
+            BadRequestError:
+              $ref: '#/components/examples/BadRequestError'
+          schema:
+            $ref: '#/components/schemas/MCErrorResponse'
+      description: This response code is returned when one or more request parameters
+        is either missing or is invalid. A caller should update his request as per
+        error details before trying again.
+    InternalServerError:
+      content:
+        application/json:
+          examples:
+            InternalError:
+              $ref: '#/components/examples/InternalServerError'
+          schema:
+            $ref: '#/components/schemas/MCErrorResponse'
+      description: This is usually a temporary error, for example when downstream
+        Doconomy system is not reachable or is experiencing heavy traffic. Please
+        contact support email or try again later.
+  schemas:
+    MCTransactions:
+      description: Request object which holds all the payment transactions from API
+        consumer for calculating transaction footprint.
+      example:
+        transactions:
+        - transactionId: ee421c25-f928-4bf6-b884-3600b76b860d
+          mcc: 3997
+          amount:
+            value: 100
+            currencyCode: USD
+        - transactionId: fdc4626c-f51e-4ba6-9728-c79ac1d9aec8
+          mcc: 5962
+          amount:
+            value: 50
+            currencyCode: EUR
+      properties:
+        transactions:
+          example:
+          - transactionId: ee421c25-f928-4bf6-b884-3600b76b860d
+            mcc: 3997
+            amount:
+              value: 100
+              currencyCode: USD
+          - transactionId: fdc4626c-f51e-4ba6-9728-c79ac1d9aec8
+            mcc: 5962
+            amount:
+              value: 50
+              currencyCode: EUR
+          items:
+            $ref: '#/components/schemas/MCTransaction'
+          maxItems: 5000
+          minItems: 1
+          type: array
+      required:
+      - transactions
+      title: Transactions
+      type: object
+    MCTransaction:
+      description: This object holds data corresponding to a single payment transaction.
+      properties:
+        transactionId:
+          description: A unique id associated with a payment transaction, e.g. original
+            payment transaction id. The same id will be returned in the response corresponding
+            to its payment transaction.
+          maxLength: 100
+          minLength: 1
+          pattern: ^[\w\-\_]{1,100}
+          type: string
+        mcc:
+          description: Merchant category code of a payment transaction that uniquely
+            defines a merchant business.
+          maxLength: 4
+          minLength: 1
+          pattern: ^\d{1,4}
+          type: string
+        amount:
+          $ref: '#/components/schemas/MCAmount'
+      required:
+      - amount
+      - mcc
+      - transactionId
+      title: Transaction
+      type: object
+    TransactionId:
+      description: A unique id associated with a payment transaction, e.g. original
+        payment transaction id. The same id will be returned in the response corresponding
+        to its payment transaction.
+      maxLength: 100
+      minLength: 1
+      pattern: ^[\w\-\_]{1,100}
+      type: string
+    MCAmount:
+      description: Amount object that includes the value and the currency in which
+        a payment transaction has been performed
+      properties:
+        value:
+          description: Actual amount of a payment transaction
+          exclusiveMaximum: false
+          exclusiveMinimum: false
+          maximum: 1000000000
+          minimum: -1000000000
+          type: number
+        currencyCode:
+          description: Currency code as per ISO 4217
+          maxLength: 3
+          minLength: 3
+          pattern: ^[A-Za-z]{3}$
+          type: string
+      required:
+      - currencyCode
+      - value
+      title: Amount
+      type: object
+    CurrencyCode:
+      description: Currency code as per ISO 4217
+      maxLength: 3
+      minLength: 3
+      pattern: ^[A-Za-z]{3}$
+      type: string
+    MCTransactionFootprints:
+      description: Response object which holds all the transaction footprints corresponding
+        to each transaction in Transactions request.
+      example:
+        transactionFootprints:
+        - waterUseSocialCost:
+            value: -5.395728226130469E8
+            currencyCode: currencyCode
+          carbonEmissionInOunces: 6.027456183070403
+          carbonEmissionInGrams: 0.8008281904610115
+          waterUseInGallons: 5.637376656633329
+          carbonSocialCost:
+            value: -7.06837403899411E8
+            currencyCode: currencyCode
+          waterUseInCubicMeters: 5.962133916683182
+          transactionId: transactionId
+        - waterUseSocialCost:
+            value: -5.395728226130469E8
+            currencyCode: currencyCode
+          carbonEmissionInOunces: 6.027456183070403
+          carbonEmissionInGrams: 0.8008281904610115
+          waterUseInGallons: 5.637376656633329
+          carbonSocialCost:
+            value: -7.06837403899411E8
+            currencyCode: currencyCode
+          waterUseInCubicMeters: 5.962133916683182
+          transactionId: transactionId
+        - waterUseSocialCost:
+            value: -5.395728226130469E8
+            currencyCode: currencyCode
+          carbonEmissionInOunces: 6.027456183070403
+          carbonEmissionInGrams: 0.8008281904610115
+          waterUseInGallons: 5.637376656633329
+          carbonSocialCost:
+            value: -7.06837403899411E8
+            currencyCode: currencyCode
+          waterUseInCubicMeters: 5.962133916683182
+          transactionId: transactionId
+        - waterUseSocialCost:
+            value: -5.395728226130469E8
+            currencyCode: currencyCode
+          carbonEmissionInOunces: 6.027456183070403
+          carbonEmissionInGrams: 0.8008281904610115
+          waterUseInGallons: 5.637376656633329
+          carbonSocialCost:
+            value: -7.06837403899411E8
+            currencyCode: currencyCode
+          waterUseInCubicMeters: 5.962133916683182
+          transactionId: transactionId
+        - waterUseSocialCost:
+            value: -5.395728226130469E8
+            currencyCode: currencyCode
+          carbonEmissionInOunces: 6.027456183070403
+          carbonEmissionInGrams: 0.8008281904610115
+          waterUseInGallons: 5.637376656633329
+          carbonSocialCost:
+            value: -7.06837403899411E8
+            currencyCode: currencyCode
+          waterUseInCubicMeters: 5.962133916683182
+          transactionId: transactionId
+      properties:
+        transactionFootprints:
+          items:
+            $ref: '#/components/schemas/MCTransactionFootprint'
+          maxItems: 5000
+          minItems: 1
+          type: array
+      required:
+      - transactionFootprints
+      title: TransactionFootprints
+      type: object
+    MCTransactionFootprint:
+      description: This object holds the transaction footprint for a payment transaction.
+      example:
+        waterUseSocialCost:
+          value: -5.395728226130469E8
+          currencyCode: currencyCode
+        carbonEmissionInOunces: 6.027456183070403
+        carbonEmissionInGrams: 0.8008281904610115
+        waterUseInGallons: 5.637376656633329
+        carbonSocialCost:
+          value: -7.06837403899411E8
+          currencyCode: currencyCode
+        waterUseInCubicMeters: 5.962133916683182
+        transactionId: transactionId
+      properties:
+        transactionId:
+          description: A unique id associated with a payment transaction, e.g. original
+            payment transaction id. The same id will be returned in the response corresponding
+            to its payment transaction.
+          maxLength: 100
+          minLength: 1
+          pattern: ^[\w\-\_]{1,100}
+          type: string
+        carbonEmissionInGrams:
+          description: The transaction's CO2 emission in grams
+          title: carbonEmissionInGrams
+          type: number
+        carbonEmissionInOunces:
+          description: The transaction's CO2 emission in ounces
+          title: carbonEmissionInOunces
+          type: number
+        carbonSocialCost:
+          $ref: '#/components/schemas/MCCarbonSocialCost'
+        waterUseInCubicMeters:
+          description: The transaction's water use in cubic meters
+          title: waterUseInCubicMeters
+          type: number
+        waterUseInGallons:
+          description: The transaction's water use in US gallons
+          title: waterUseInGallons
+          type: number
+        waterUseSocialCost:
+          $ref: '#/components/schemas/MCWaterUseSocialCost'
+      required:
+      - transactionId
+      title: TransactionFootprint
+      type: object
+    MCCarbonSocialCost:
+      description: The response object that contains a transaction's social cost of
+        carbon use.
+      example:
+        value: -7.06837403899411E8
+        currencyCode: currencyCode
+      properties:
+        value:
+          description: Actual value of CarbonSocialCost
+          exclusiveMaximum: false
+          exclusiveMinimum: false
+          maximum: 1000000000
+          minimum: -1000000000
+          title: value
+          type: number
+        currencyCode:
+          description: Currency code as per ISO 4217
+          maxLength: 3
+          minLength: 3
+          pattern: ^[A-Za-z]{3}$
+          type: string
+      title: CarbonSocialCost
+      type: object
+    MCWaterUseSocialCost:
+      description: The response object that contains a transaction's social cost of
+        water use.
+      example:
+        value: -5.395728226130469E8
+        currencyCode: currencyCode
+      properties:
+        value:
+          description: Actual value of CarbonSocialCost
+          exclusiveMaximum: false
+          exclusiveMinimum: false
+          maximum: 1000000000
+          minimum: -1000000000
+          title: value
+          type: number
+        currencyCode:
+          description: Currency code as per ISO 4217
+          maxLength: 3
+          minLength: 3
+          pattern: ^[A-Za-z]{3}$
+          type: string
+      title: WaterUseSocialCost
+      type: object
+    MCSupportedCurrencies:
+      description: The response object that contains a list of supported curencies.
+      example:
+        currencies:
+        - currencyCode: currencyCode
+        - currencyCode: currencyCode
+        - currencyCode: currencyCode
+        - currencyCode: currencyCode
+        - currencyCode: currencyCode
+      properties:
+        currencies:
+          items:
+            $ref: '#/components/schemas/MCCurrency'
+          maxItems: 1000
+          minItems: 1
+          type: array
+      required:
+      - currencies
+      title: SupportedCurrencies
+      type: object
+    MCCurrency:
+      description: This object represents one currency code information.
+      example:
+        currencyCode: currencyCode
+      properties:
+        currencyCode:
+          description: Currency code as per ISO 4217
+          maxLength: 3
+          minLength: 3
+          pattern: ^[A-Za-z]{3}$
+          type: string
+      required:
+      - currencyCode
+      title: Currency
+      type: object
+    MCSupportedMerchantCategories:
+      description: The response object that contains a list of supported merchant
+        categories.
+      example:
+        merchantCategories:
+        - mcc: mcc
+        - mcc: mcc
+        - mcc: mcc
+        - mcc: mcc
+        - mcc: mcc
+      properties:
+        merchantCategories:
+          items:
+            $ref: '#/components/schemas/MCMerchantCategory'
+          maxItems: 5000
+          minItems: 1
+          type: array
+      required:
+      - merchantCategories
+      title: SupportedMerchantCategories
+      type: object
+    MCMerchantCategory:
+      description: This object represents one merchant category information.
+      example:
+        mcc: mcc
+      properties:
+        mcc:
+          description: Merchant category code of a payment transaction that uniquely
+            defines a merchant business.
+          maxLength: 4
+          minLength: 1
+          pattern: ^\d{1,4}
+          type: string
+      required:
+      - mcc
+      title: MerchantCategory
+      type: object
+    MCErrorResponse:
+      description: The error response object which gets returned in case of any error.
+      properties:
+        Errors:
+          $ref: '#/components/schemas/MCErrors'
+      required:
+      - Errors
+      title: ErrorResponse
+      type: object
+    MCErrors:
+      description: Error object which returns list of Error objects
+      properties:
+        Error:
+          items:
+            $ref: '#/components/schemas/MCError'
+          type: array
+      required:
+      - Error
+      title: Errors
+      type: object
+    MCError:
+      description: Error object which contains details about error
+      properties:
+        Source:
+          description: The application name that generated this error. Every error
+            message that is generated and returned by the gateway will have this field
+            equal to Gateway. Other possible values are Doconomy-Proxy and Doconomy.
+          maxLength: 100
+          minLength: 1
+          type: string
+        ReasonCode:
+          description: A unique constant identifying the error case encountered during
+            request processing.
+          maxLength: 100
+          minLength: 1
+          type: string
+        Description:
+          description: Short description of the ReasonCode field.
+          maxLength: 1000
+          minLength: 10
+          type: string
+        Recoverable:
+          description: Indicates whether this error will always be returned for this
+            request, or retrying could change the outcome.
+          type: boolean
+        Details:
+          description: (Optional) Where appropriate, indicates detailed information
+            about data received and calculated during request processing, to help
+            the user with diagnosing errors.
+          maxLength: 5000
+          minLength: 0
+          type: string
+      required:
+      - Description
+      - ReasonCode
+      - Recoverable
+      - Source
+      title: Error
+      type: object
+

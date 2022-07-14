@@ -1,0 +1,7 @@
+mastercard:
+  api:
+    base-path: https://sandbox.api.mastercard.com/doconomy  # Refers to sandbox endpoint
+    key-file: classpath:cf-sandbox.p12 # Copy .p12 file in src/main/resources and set value as classpath:nameOfYourP12File.p12
+    consumer-key: nF3qmscUU3q2Q3zkxDrQhB7HIWBDRzy9axUQPC6rfbbdbb37!395581af28d24b69aa5cb47992273f970000000000000000 # Copy the Consumer key from "Sandbox/Production Keys" section on your project page
+    keystore-alias: keyalias  # Alias of your key. Default key alias for sandbox is keyalias
+    keystore-password: keystorepassword # Password of your Keystore. Default keystore password for sandbox project is keystorepassword

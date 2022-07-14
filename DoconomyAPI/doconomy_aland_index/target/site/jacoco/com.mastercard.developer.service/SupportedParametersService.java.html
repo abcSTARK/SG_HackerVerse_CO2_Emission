@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SupportedParametersService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">doconomy_aland_index</a> &gt; <a href="index.source.html" class="el_package">com.mastercard.developer.service</a> &gt; <span class="el_source">SupportedParametersService.java</span></div><h1>SupportedParametersService.java</h1><pre class="source lang-java linenums">package com.mastercard.developer.service;
+
+import org.openapitools.client.ApiClient;
+import org.openapitools.client.ApiException;
+import org.openapitools.client.api.SupportedParametersApi;
+import org.openapitools.client.model.MCSupportedCurrencies;
+import org.openapitools.client.model.MCSupportedMerchantCategories;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+/**
+ * This service calls the Get Supported Currencies and Merchant Categories APIs.
+ */
+@Service
+public class SupportedParametersService {
+<span class="fc" id="L18">    private static final Logger LOGGER = LoggerFactory.getLogger(SupportedParametersService.class);</span>
+
+    private final SupportedParametersApi supportedParametersApi;
+
+    @Autowired
+<span class="fc" id="L23">    public SupportedParametersService(ApiClient apiClient) {</span>
+<span class="fc" id="L24">        LOGGER.info(&quot;Initializing Supported Parameters API&quot;);</span>
+<span class="fc" id="L25">        supportedParametersApi = new SupportedParametersApi(apiClient);</span>
+<span class="fc" id="L26">    }</span>
+
+    public MCSupportedCurrencies getSupportedCurrencies() throws ApiException {
+<span class="fc" id="L29">        LOGGER.info(&quot;Calling Get Supported Currencies API&quot;);</span>
+
+<span class="fc" id="L31">        MCSupportedCurrencies mcSupportedCurrencies = supportedParametersApi.getSupportedCurrencies();</span>
+
+<span class="fc" id="L33">        LOGGER.info(&quot;Returning list of supported currencies.&quot;);</span>
+
+<span class="fc" id="L35">        return mcSupportedCurrencies;</span>
+
+    }
+
+    public MCSupportedMerchantCategories getSupportedMerchantCategories() throws ApiException {
+<span class="fc" id="L40">        LOGGER.info(&quot;Calling Get Supported Merchant Categories API&quot;);</span>
+
+<span class="fc" id="L42">        MCSupportedMerchantCategories merchantCategories = supportedParametersApi.getSupportedMerchantCategories();</span>
+
+<span class="fc" id="L44">        LOGGER.info(&quot;Returning list of supported MCCs.&quot;);</span>
+
+<span class="fc" id="L46">        return merchantCategories;</span>
+
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>
